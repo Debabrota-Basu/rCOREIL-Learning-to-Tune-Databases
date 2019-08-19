@@ -1,5 +1,20 @@
 # rCOREIL-Learning-to-Tune-Databases
 
+rCOREIL and COREIL are algorithms that learn-to-do adaptive
+performance tuning of database applications.
+
+As a theoretical framework, rCOREIL and COREIL model the execution of queries and updates as a Markov
+decision process whose states are database configurations, actions are
+configuration changes, and rewards are functions of the cost of configuration change and query and update evaluation.
+
+This code instantiates the algorithms for automated index tuning and evaluates rCOREIL and COREIL
+on an OLTP dataset.
+
+# Original Papers
+
+1. <b>rCOREIL:</b> Basu, Debabrota, Qian Lin, Weidong Chen, Hoang Tam Vo, Zihong Yuan, Pierre Senellart, and Stéphane Bressan. "Regularized cost-model oblivious database tuning with reinforcement learning." In Transactions on Large-Scale Data-and Knowledge-Centered Systems XXVIII, pp. 96-132. Springer, Berlin, Heidelberg, 2016.
+2. <b>COREIL:</b> Basu, Debabrota, Qian Lin, Weidong Chen, Hoang Tam Vo, Zihong Yuan, Pierre Senellart, and Stéphane Bressan. "Cost-model oblivious database tuning with reinforcement learning." In Database and Expert Systems Applications, pp. 253-268. Springer, Cham, 2015.
+
 # 0. Prerequisites
 
 a) Java, b) IBM DB2, c) Apache Ant, d) OLTP Benchmark
