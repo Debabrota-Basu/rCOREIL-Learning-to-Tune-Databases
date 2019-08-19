@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="autotune-IDE">
+    <!-- TODO: edit the following target according to your needs -->
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#runsingle) -->
+    <target name="run-selected-file-in-tests">
+        <fail unless="run.class">Must set property 'run.class'</fail>
+        <ant antfile="build.xml" inheritall="false" target="jar"/>
+        <java classname="${run.class}" failonerror="true" fork="true">
+            <classpath>
+                <pathelement path="build/dbtune-0.1.jar;src;lib/ant-contrib-1.0b3.jar;lib/args4j-2.0.29.jar;lib/cglib-nodep-2.2.jar;lib/commons-io-2.4.jar;lib/commons-lang3-3.2.1.jar;lib/db2jcc4-9.7.5.jar;lib/guava-17.0.jar;lib/hamcrest-library-1.3.jar;lib/jackson-core-1.8.1.jar;lib/jackson-mapper-1.8.1.jar;lib/jarjar-snapshot.jar;lib/javassist-3.17.1-GA.jar;lib/jblas-1.2.3.jar;lib/jline-2.9.2.jar;lib/junit-4.11.jar;lib/la4j-0.4.9.jar;lib/log4j-1.2.17.jar;lib/mockito-all-1.9.5.jar;lib/objenesis-1.2.jar;lib/powermock-mockito-1.5-full.jar;lib/slf4j-api-1.7.7.jar;lib/slf4j-simple-1.7.7.jar"/>
+            </classpath>
+        </java>
+    </target>
+    <!-- TODO: edit the following target according to your needs -->
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#runsingle) -->
+    <target name="-profile-check">
+        <startprofiler freeform="true"/>
+    </target>
+    <target depends="-profile-check" if="profiler.configured" name="profile-selected-file-in-tests">
+        <fail unless="profile.class">Must set property 'profile.class'</fail>
+        <ant antfile="build.xml" inheritall="false" target="jar"/>
+        <path id="cp">
+            <pathelement path="build/dbtune-0.1.jar;src;lib/ant-contrib-1.0b3.jar;lib/args4j-2.0.29.jar;lib/cglib-nodep-2.2.jar;lib/commons-io-2.4.jar;lib/commons-lang3-3.2.1.jar;lib/db2jcc4-9.7.5.jar;lib/guava-17.0.jar;lib/hamcrest-library-1.3.jar;lib/jackson-core-1.8.1.jar;lib/jackson-mapper-1.8.1.jar;lib/jarjar-snapshot.jar;lib/javassist-3.17.1-GA.jar;lib/jblas-1.2.3.jar;lib/jline-2.9.2.jar;lib/junit-4.11.jar;lib/la4j-0.4.9.jar;lib/log4j-1.2.17.jar;lib/mockito-all-1.9.5.jar;lib/objenesis-1.2.jar;lib/powermock-mockito-1.5-full.jar;lib/slf4j-api-1.7.7.jar;lib/slf4j-simple-1.7.7.jar"/>
+        </path>
+        <java classname="${profile.class}" fork="true">
+            <classpath refid="cp"/>
+            <jvmarg line="${agent.jvmargs}"/>
+        </java>
+    </target>
+    <!-- TODO: edit the following target according to your needs -->
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#compilesingle) -->
+    <target name="compile-selected-files-in-tests">
+        <fail unless="files">Must set property 'files'</fail>
+        <!-- TODO decide on and define some value for ${build.classes.dir} -->
+        <mkdir dir="${build.classes.dir}"/>
+        <javac destdir="${build.classes.dir}" includes="${files}" source="1.7" srcdir="tests">
+            <classpath path="src;lib/ant-contrib-1.0b3.jar;lib/args4j-2.0.29.jar;lib/cglib-nodep-2.2.jar;lib/commons-io-2.4.jar;lib/commons-lang3-3.2.1.jar;lib/db2jcc4-9.7.5.jar;lib/guava-17.0.jar;lib/hamcrest-library-1.3.jar;lib/jackson-core-1.8.1.jar;lib/jackson-mapper-1.8.1.jar;lib/jarjar-snapshot.jar;lib/javassist-3.17.1-GA.jar;lib/jblas-1.2.3.jar;lib/jline-2.9.2.jar;lib/junit-4.11.jar;lib/la4j-0.4.9.jar;lib/log4j-1.2.17.jar;lib/mockito-all-1.9.5.jar;lib/objenesis-1.2.jar;lib/powermock-mockito-1.5-full.jar;lib/slf4j-api-1.7.7.jar;lib/slf4j-simple-1.7.7.jar"/>
+        </javac>
+    </target>
+    <!-- TODO: edit the following target according to your needs -->
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#compilesingle) -->
+    <target name="compile-selected-files-in-src">
+        <fail unless="files">Must set property 'files'</fail>
+        <!-- TODO decide on and define some value for ${build.classes.dir} -->
+        <mkdir dir="${build.classes.dir}"/>
+        <javac destdir="${build.classes.dir}" includes="${files}" source="1.7" srcdir="src">
+            <classpath path="src;lib/ant-contrib-1.0b3.jar;lib/args4j-2.0.29.jar;lib/cglib-nodep-2.2.jar;lib/commons-io-2.4.jar;lib/commons-lang3-3.2.1.jar;lib/db2jcc4-9.7.5.jar;lib/guava-17.0.jar;lib/hamcrest-library-1.3.jar;lib/jackson-core-1.8.1.jar;lib/jackson-mapper-1.8.1.jar;lib/jarjar-snapshot.jar;lib/javassist-3.17.1-GA.jar;lib/jblas-1.2.3.jar;lib/jline-2.9.2.jar;lib/junit-4.11.jar;lib/la4j-0.4.9.jar;lib/log4j-1.2.17.jar;lib/mockito-all-1.9.5.jar;lib/objenesis-1.2.jar;lib/powermock-mockito-1.5-full.jar;lib/slf4j-api-1.7.7.jar;lib/slf4j-simple-1.7.7.jar"/>
+        </javac>
+    </target>
+    <!-- TODO: edit the following target according to your needs -->
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#runsingle) -->
+    <target name="debug-selected-file-in-tests">
+        <fail unless="debug.class">Must set property 'debug.class'</fail>
+        <ant antfile="build.xml" inheritall="false" target="jar"/>
+        <path id="cp">
+            <pathelement path="src;lib/ant-contrib-1.0b3.jar;lib/args4j-2.0.29.jar;lib/cglib-nodep-2.2.jar;lib/commons-io-2.4.jar;lib/commons-lang3-3.2.1.jar;lib/db2jcc4-9.7.5.jar;lib/guava-17.0.jar;lib/hamcrest-library-1.3.jar;lib/jackson-core-1.8.1.jar;lib/jackson-mapper-1.8.1.jar;lib/jarjar-snapshot.jar;lib/javassist-3.17.1-GA.jar;lib/jblas-1.2.3.jar;lib/jline-2.9.2.jar;lib/junit-4.11.jar;lib/la4j-0.4.9.jar;lib/log4j-1.2.17.jar;lib/mockito-all-1.9.5.jar;lib/objenesis-1.2.jar;lib/powermock-mockito-1.5-full.jar;lib/slf4j-api-1.7.7.jar;lib/slf4j-simple-1.7.7.jar"/>
+        </path>
+        <nbjpdastart addressproperty="jpda.address" name="autotune" transport="dt_socket">
+            <classpath refid="cp"/>
+        </nbjpdastart>
+        <java classname="${debug.class}" fork="true">
+            <classpath refid="cp"/>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,address=${jpda.address}"/>
+        </java>
+    </target>
+</project>

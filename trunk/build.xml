@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!--
+   **Note to devs**: If this file is modified, the 'core-how-to-build' Wiki 
+   entry must be updated accordingly.
+-->
+<project name="${project}" default="compile">
+  <property file="build.properties"/>
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+           classpath="${lib.dir}/ant-contrib-1.0b3.jar"/>
+  <path id="compile.classpath">
+    <fileset dir="${lib.dir}" includes="*.jar"/>
+  </path>
+  <target name="clean">
+    <ant dir="." antfile="common.xml" target="clean" />
+  </target>
+
+  <!-- core -->
+  <target name="compile" >
+    <ant dir="." antfile="common.xml" target="compile">
+      <reference refid="compile.classpath" />
+    </ant>
+  </target>
+  <target name="compile.test" depends="compile">
+    <ant dir="." antfile="common.xml" target="compile.test">
+      <reference refid="compile.classpath" />
+    </ant>
+  </target>
+  <target name="unit" depends="compile.test">
+    <ant dir="." antfile="common.xml" target="unit">
+      <reference refid="compile.classpath" />
+    </ant>
+  </target>
+  <target name="functional" depends="compile.test">
+    <ant dir="." antfile="common.xml" target="functional">
+      <reference refid="compile.classpath" />
+    </ant>
+  </target>
+
+  <!-- packaging -->
+  <target name="jar" depends="compile, compile.test">
+    <ant dir="." antfile="common.xml" target="jar" />
+  </target>
+  <target name="javadoc">
+    <ant dir="." antfile="common.xml" target="javadoc">
+      <reference refid="compile.classpath" />
+    </ant>
+  </target>
+  <target name="dist" depends="clean,jar,javadoc" description="Package distribution.">
+    <ant dir="." antfile="common.xml" target="dist" />
+  </target>
+  <target name="dist.deps" depends="clean,jar,javadoc" description="Package distribution.">
+    <copy toDir="${bld.dir}/lib/" flatten="true" overwrite="true">
+      <fileset dir="${lib.dir}" includes="*.jar"/>
+      <fileset dir="extensions/" includes="**/*.jar"/>
+    </copy>
+    <ant dir="." antfile="common.xml" target="dist" />
+  </target>
+  
+  <!-- running -->
+  <target name="run.one" depends="jar" description="Running.">
+    <ant dir="." antfile="common.xml" target="run.one">
+        <property  name="class" value="Laucher"/>
+    </ant>
+  </target>
+</project>

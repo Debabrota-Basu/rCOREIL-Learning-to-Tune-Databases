@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<project name="common">
+  <path id="compile.classpath" />
+  <!-- TODO simplify this file by just having one task for each, i.e.:
+        * compile
+        * scalacompile
+        * junit
+        * checkstyle
+
+       instead of having compile, compile.test we just recieve parameters
+       for the task in this case, the name of the srcdir and destdir.
+       Similarly for the remaining tasks.
+  -->
+
+  <target name="compile" description="Compile Java source.">
+    <echo message="Compiling ${project}"/>
+    <mkdir dir="${bld.dir}/classes"/>
+    <javac srcdir="${src.dir}" debug="on" destdir="${bld.dir}/classes" includeantruntime="false">
+      <compilerarg value="-Xlint:all,-serial"/>
+      <classpath refid="compile.classpath"/>
+    </javac>
+  </target>
+
+  <target name="compile.test" description="Compile test source.">
+    <echo message="Compiling ${project} tests"/>
+    <mkdir dir="${bld.dir}/junit.output"/>
+    <mkdir dir="${bld.dir}/tests"/>
+    <mkdir dir="${bld.dir}/temp"/>
+    <javac srcdir="${tst.dir}" debug="on" destdir="${bld.dir}/tests" includeantruntime="false">
+      <classpath path="${bld.dir}/classes"/>
+      <classpath refid="compile.classpath"/>
+    </javac>
+  </target>
+
+  <target name="scala.compile" description="Compile Scala source.">
+    <taskdef resource="scala/tools/ant/antlib.xml">
+      <classpath>
+        <pathelement location="${lib.dir}/scala-library-2.9.2.jar"/>
+      </classpath>
+    </taskdef>
+    <echo message="Compiling ${project}"/>
+    <scalac srcdir="${src.dir}" destdir="${bld.dir}/classes">
+      <classpath refid="compile.classpath"/>
+      <include name="**/*.scala" />
+    </scalac>
+  </target>
+
+  <target name="scala.compile.test" description="Compile Scala test source">
+    <taskdef resource="scala/tools/ant/antlib.xml">
+      <classpath>
+        <pathelement location="${lib.dir}/scala-library-2.9.2.jar"/>
+      </classpath>
+    </taskdef>
+    <echo message="Compiling ${project} tests"/>
+    <scalac srcdir="${tst.dir}" destdir="${bld.dir}/tests">
+      <classpath>
+        <path refid="compile.classpath"/>
+        <pathelement location="${bld.dir}/classes"/>
+      </classpath>
+      <include name="**/*.scala" />
+    </scalac>
+  </target>
+
+  <target name="unit" description="Execute Unit tests.">
+    <echo message="Executing unit tests"/>
+    <junit printsummary="yes" haltonerror="yes" haltonfailure="yes" fork="yes">
+        <classpath>
+          <path refid="compile.classpath"/>
+          <pathelement location="${bld.dir}/classes"/>
+          <pathelement location="${bld.dir}/tests"/>
+        </classpath>
+        <sysproperty key="java.library.path" path="${lib.dir}"/>
+        <batchtest fork="yes" todir="${bld.dir}/junit.output">
+          <fileset dir="${bld.dir}/tests" >
+            <include name="**/*Test.class"/>
+            <exclude name="**/*FunctionalTest.class"/>
+            <exclude name="**/AllTests.java"/>
+          </fileset>
+        </batchtest>
+    </junit>
+  </target>
+
+  <target name="functional" description="Execute Functional tests.">
+    <echo message="Executing functional tests"/>
+    <junit printsummary="yes" haltonerror="yes" haltonfailure="yes" fork="yes">
+        <classpath>
+          <path refid="compile.classpath"/>
+          <pathelement location="${bld.dir}/classes"/>
+          <pathelement location="${bld.dir}/tests"/>
+        </classpath>
+        <sysproperty key="java.library.path" path="${lib.dir}"/>
+        <batchtest fork="yes" todir="${bld.dir}/junit.output">
+          <fileset dir="${bld.dir}/tests" >
+            <include name="**/*FunctionalTest.class"/>
+            <exclude name="**/AllTests.java"/>
+          </fileset>
+        </batchtest>
+    </junit>
+  </target>
+
+  <target name="one" depends="argument-checking" description="Run One Unit Test.">
+    <echo message="Running test ${class}"/>
+    <junit printsummary="no" haltonerror="yes" haltonfailure="yes" showoutput="no" fork="yes">
+      <classpath>
+        <path refid="compile.classpath"/>
+        <pathelement location="${bld.dir}/classes"/>
+        <pathelement location="${bld.dir}/tests"/>
+      </classpath>
+      <sysproperty key="java.library.path" path="${lib.dir}"/>
+      <test todir="${bld.dir}/junit.output" name="${class}"/>
+      <formatter usefile="false" type="plain"/>
+    </junit>
+  </target>
+
+  <target name="run.one" depends="argument-checking" description="Run One Class' main.">
+    <echo message="Running main method from ${class}"/>
+    <java classname="${class}" fork="no">
+      <classpath>
+        <path refid="compile.classpath"/>
+        <pathelement location="${bld.dir}/classes"/>
+        <pathelement location="${bld.dir}/tests"/>
+      </classpath>
+      <sysproperty key="java.library.path" path="${lib.dir}"/>
+    </java>
+  </target>
+
+  <target name="jar" description="Generates a JAR file">
+    <echo message="Generating jar"/>
+<!--     <jar destfile="${bld.dir}/${project}-${version}.jar" basedir="${bld.dir}/classes" /> -->
+	<jar destfile="${bld.dir}/${project}-${version}.jar">
+		<fileset dir="${bld.dir}/classes"/>
+		<fileset dir="${bld.dir}/tests"/>
+	</jar>
+  </target>
+
+  <target name="argument-checking" >
+    <fail message="No class variable defined" unless="class" />
+    <available classname="${class}"
+          classpath="${bld.dir}/tests/"
+          property="class.present" />
+    <fail message="Class ${class} doesn't exist in ${bld.dir}/tests/" unless="class.present" />
+  </target>
+
+  <target name="javadoc" description="Generate Javadocs.">
+    <mkdir dir="${bld.dir}/javadoc"/>
+    <javadoc sourcepath="${src.dir}"
+               packagenames="*"
+               excludepackagenames="tests"
+               destdir="${bld.dir}/javadoc"
+               author="true"
+               maxmemory="512M"
+               protected="true"
+               version="true"
+               charset="UTF-8"
+               locale="en_US"
+               source="1.5"
+               linksource="yes"
+               breakiterator="yes"
+               use="yes"
+               windowtitle="${project}-${version} API">
+        <sourcepath>
+          <pathelement location="${src.dir}"/>
+        </sourcepath>
+        <classpath refid="compile.classpath"/>
+        <taglet name="latexlet.InlineBlockLaTeXlet">
+          <path refid="compile.classpath"/>
+        </taglet>
+        <taglet name="latexlet.BlockLaTeXlet">
+          <path refid="compile.classpath"/>
+        </taglet>
+        <taglet name="latexlet.InlineLaTeXlet">
+          <path refid="compile.classpath"/>
+        </taglet>
+      </javadoc>
+  </target>
+
+  <target name="checkstyle" description="Runs checkstyle on all the source files">
+    <checkstyle config="${cfg.dir}/checkstyle.xml">
+      <fileset dir="${src.dir}" includes="**/*.java"/>       
+      <formatter type="plain"/>
+    </checkstyle>
+  </target>
+
+  <target name="dist" description="Package distribution.">
+    <copy toDir="${bld.dir}/${bin.dir}" flatten="true" overwrite="true">
+      <fileset dir="." includes="**/${bin.dir}/*"/>
+    </copy>
+    <chmod perm="755" dir="${bld.dir}" includes="**/${bin.dir}/*"/>
+    <tar destfile="${bld.dir}/${project}-${version}.tgz"
+         compression="gzip"
+         basedir="${bld.dir}/"
+         excludes="classes/,classes/**,tests/,tests/**,junit.output,junit.output/**" />
+  </target>
+
+  <target name="clean" description="Remove generated files.">
+    <delete dir="${bld.dir}"/>
+  </target>
+</project>

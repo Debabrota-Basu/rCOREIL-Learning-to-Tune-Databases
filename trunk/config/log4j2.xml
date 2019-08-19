@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+  <appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %level - %m%n%ex%n"/>
+    </Console>
+    <File name="log4jdbc_file" fileName="log4jdbc.out">
+      <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %level - %m%n%ex%n"/>
+    </File>
+  </appenders>
+  <loggers>
+    <root level="off">
+      <appender-ref ref="Console"/>
+    </root>
+    <logger name="log4jdbc.log4j2" level="info" additivity="false">
+		<MarkerFilter marker="LOG4JDBC_CONNECTION" onMatch="DENY" onMismatch="NEUTRAL"/>
+		<appender-ref ref="log4jdbc_file"/>
+    </logger>
+  </loggers>
+</configuration>
