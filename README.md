@@ -1,7 +1,6 @@
 # rCOREIL-Learning-to-Tune-Databases
 
-rCOREIL and COREIL are algorithms that learn-to-do adaptive
-performance tuning of database applications.
+rCOREIL and COREIL are algorithms that learn-to-do adaptive performance tuning of database applications.
 
 As a theoretical framework, rCOREIL and COREIL model the execution of queries and updates as a Markov
 decision process whose states are database configurations, actions are
@@ -12,8 +11,8 @@ on an OLTP dataset.
 
 # Original Papers
 
-1. <b>rCOREIL:</b> Basu, Debabrota, Qian Lin, Weidong Chen, Hoang Tam Vo, Zihong Yuan, Pierre Senellart, and Stéphane Bressan. "Regularized cost-model oblivious database tuning with reinforcement learning." In Transactions on Large-Scale Data-and Knowledge-Centered Systems XXVIII, pp. 96-132. Springer, Berlin, Heidelberg, 2016.
-2. <b>COREIL:</b> Basu, Debabrota, Qian Lin, Weidong Chen, Hoang Tam Vo, Zihong Yuan, Pierre Senellart, and Stéphane Bressan. "Cost-model oblivious database tuning with reinforcement learning." In Database and Expert Systems Applications, pp. 253-268. Springer, Cham, 2015.
+1. <b>rCOREIL:</b> Basu, Debabrota, Qian Lin, Weidong Chen, Hoang Tam Vo, Zihong Yuan, Pierre Senellart, and Stéphane Bressan. <a href="https://hal.archives-ouvertes.fr/hal-02115175/document">"Regularized cost-model oblivious database tuning with reinforcement learning."</a> In Transactions on Large-Scale Data-and Knowledge-Centered Systems XXVIII, pp. 96-132. Springer, Berlin, Heidelberg, 2016.
+2. <b>COREIL:</b> Basu, Debabrota, Qian Lin, Weidong Chen, Hoang Tam Vo, Zihong Yuan, Pierre Senellart, and Stéphane Bressan. <a href="https://link.springer.com/chapter/10.1007/978-3-319-22849-5_18">"Cost-model oblivious database tuning with reinforcement learning."</a> In Database and Expert Systems Applications, pp. 253-268. Springer, Cham, 2015.
 
 # 0. Prerequisites
 
