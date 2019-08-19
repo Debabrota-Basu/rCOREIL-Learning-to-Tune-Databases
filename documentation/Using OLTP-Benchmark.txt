@@ -1,0 +1,83 @@
+﻿@@@ Using OLTP-Benchmark
+
+1. Create an empty database for TPC-C. Run the following command in the *DB2* command window. 
+
+db2 create db TPCC
+
+In case that the TPCC database already exists (and even being used), run the following commands to drop it. 
+
+db2 connect reset
+db2 drop db TPCC
+
+
+2. Download and install OLTP-Benchmark. Run the following commands in a *normal* command window. 
+
+cd <some_dir>
+git clone https://github.com/oltpbenchmark/oltpbench.git
+cd oltpbench
+ant
+
+Note: You must install Apache Ant before hand. See instructions: http://ant.apache.org/manual/install.html
+
+
+3. Copy and rename config/sample_tpcc_config.xml to config/db2_tpcc_config.xml, and edit it with the following basic modification: 
+
+    <!-- Connection details -->
+    <dbtype>db2</dbtype>
+    <driver>com.ibm.db2.jcc.DB2Driver</driver>
+    <DBUrl>jdbc:db2://127.0.0.1:50000/TPCC</DBUrl>
+    <username>USERNAME</username>
+    <password>PASSWORD</password>
+    <isolation>TRANSACTION_SERIALIZABLE</isolation>
+
+Note: Replace USERNAME and PASSWORD according to your settings.
+
+
+4. Stay in the oltpbench folder and run the following commands for different purposes. 
+
+(1) Create the tables. (--> for initialization)
+
+oltpbenchmark.bat -b tpcc -c config\db2_tpcc_config.xml --create=true
+
+(2) Clear the current records
+
+oltpbenchmark.bat -b tpcc -c config\db2_tpcc_config.xml --clear=true
+
+(3) Load in data without creating the tables. 
+
+oltpbenchmark.bat -b tpcc -c config\db2_tpcc_config.xml --load=true
+
+(4) Run the TPC-C benchmark. (--> for testing)
+
+oltpbenchmark.bat -b tpcc -c config\db2_tpcc_config.xml --execute=true -s 5
+
+
+5. Collect the TPC-C SQL statements. Assume that the TPCC database is just newly initialized. Do the following steps. 
+
+#1. Connect to the TPCC database. 
+
+db2 connect to TPCC
+
+#2. Create an event monitor for SQL statements. 
+
+db2 "CREATE EVENT MONITOR stmon FOR STATEMENTS WRITE TO FILE '<some_dir>'"
+
+#3. Turn on the event monitor. 
+
+db2 "SET EVENT MONITOR stmon STATE = 1"
+
+#4. Launch the TPC-C benchmark. Refer to 4.(2). 
+
+#5. Turn off the event monitor. 
+
+db2 "SET EVENT MONITOR stmon STATE = 0"
+
+#6. Translate event monitor into readable stuff. (This is the output we want!)
+
+db2evmon -path <dir_in_#2> > <some_file>
+
+#7. Delete the event monitor. 
+
+db2 "DROP EVENT MONITOR stmon"
+
+Note: Step #4 should run in a *normal* command window under the oltpbench folder. Steps #1-#3 and #5-#7 must run in the same *DB2* command window. 
