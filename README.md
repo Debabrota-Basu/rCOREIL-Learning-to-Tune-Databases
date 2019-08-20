@@ -41,3 +41,24 @@ b) Edit "autotune\tests\sg.edu.nus.autotune\Arguments.java".
   2)Change workload by editing "private static final String DEFAULT_WORKLOAD"
 
 c) Compile & run "autotune\tests\sg.edu.nus.autotune\Launcher.java"
+
+# Bibliography
+Use this bibliography if you use the code:
+
+1. <b>rCOREIL:</b> @incollection{basu2016regularized,
+  title={Regularized cost-model oblivious database tuning with reinforcement learning},
+  author={Basu, Debabrota and Lin, Qian and Chen, Weidong and Vo, Hoang Tam and Yuan, Zihong and Senellart, Pierre and Bressan, St{\'e}phane},
+  booktitle={Transactions on Large-Scale Data-and Knowledge-Centered Systems XXVIII},
+  pages={96--132},
+  year={2016},
+  publisher={Springer}
+}
+
+2. <b>COREIL:</b> @inproceedings{basu2015cost,
+  title={Cost-model oblivious database tuning with reinforcement learning},
+  author={Basu, Debabrota and Lin, Qian and Chen, Weidong and Vo, Hoang Tam and Yuan, Zihong and Senellart, Pierre and Bressan, St{\'e}phane},
+  booktitle={Database and Expert Systems Applications},
+  pages={253--268},
+  year={2015},
+  organization={Springer}
+}
